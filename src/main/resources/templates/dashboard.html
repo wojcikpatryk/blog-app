@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Postter</title>
+
+    <script src="webjars/jquery/3.0.0/jquery.min.js"></script>
+    <link href="webjars/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"/>
+    <script src="webjars/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+<!-- NAV BAR -->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+
+    <a class="navbar-brand" href="/dashboard">
+        Postter
+    </a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <form th:action="@{/search}" method="get" class="form-inline my-2 my-lg-0">
+                    <input name="username" class="form-control mr-sm-2" type="search" placeholder="Search users"/>
+                    <button class="btn btn-outline-light my-2 my-sm-0" type="submit">
+                        Search
+                    </button>
+                </form>
+            </li>
+        </ul>
+
+        <a th:href="@{/user(username=${currentUsername})}">
+            <img th:src="'https://api.adorable.io/avatars/50/' + ${currentUsername} + '.png'"
+                 class="rounded-circle mr-4"
+                 style="width: 2.5rem"/>
+        </a>
+
+        <form action="/logout">
+            <button type="submit" class="btn btn-outline-light"> Logout</button>
+        </form>
+    </div>
+
+</nav>
+
+<!-- HEADER -->
+
+<div class="container text-center">
+    <h1 th:text="'Hello ' + ${currentUsername} + '! How are you?'" class="display-4">Text</h1>
+</div>
+
+<!-- POST FORM -->
+
+<div class="container center-block">
+    <form action="/dashboard" method="post" th:object="${post}" class="my-2 my-lg-0">
+            <textarea
+                    th:field="*{content}"
+                    class="form-control mr-sm-2"
+                    type="search"
+                    rows="3"
+                    maxLength="255"
+                    placeholder="Start typing here..."
+                    style="resize: none"
+                    autoFocus></textarea>
+        <button class="btn btn-primary my-2 my-sm-0 w-100" type="submit">
+            Post it!
+        </button>
+    </form>
+</div>
+
+<!-- DIVIDER -->
+
+<hr class="width: 75%"/>
+
+<!-- CONTAINER WITH LIST OF POSTS-->
+
+<div class="container center-block" th:each="post : ${posts}">
+    <div class="card mx-auto mb-3">
+        <div class="card-body">
+            <h5 class="card-featured">
+                <a style="text-decoration: none;"
+                   th:href="@{/user(username=${post.getUser().getUsername()})}">
+
+                    <img class="rounded-circle" style="width: 2.5rem"
+                         th:src="'https://api.adorable.io/avatars/50/' + ${post.getUser().getUsername()} + '.png'"/>
+
+                    <span th:text="${post.getUser().getUsername()}" class="m-2"> Username</span>
+                </a>
+                <span class="badge badge-secondary" th:text="'Posted at ' + ${post.getCreatedAt()}">Date</span>
+
+                <a style="text-decoration: none;"
+                   th:if="${currentUsername.equals(post.getUser().getUsername())}"
+
+                   th:href="@{/removePostFromDashboard(id=${post.getId()})}">
+                    <button class="btn badge badge-danger">
+                        x delete
+                    </button>
+                </a>
+
+            </h5>
+
+            <p class="card-text" th:text="${post.getContent()}">Content</p>
+
+            <p>
+                <button class="btn btn-primary" type="button" data-toggle="collapse"
+                        th:data-target="'#post' + ${post.getId()}" aria-expanded="false"
+                        aria-controls="collapseExample">
+                    Comments
+                </button>
+            </p>
+            <div class="collapse" th:id="'post' + ${post.getId()}">
+
+                <form th:action="@{/addComment(post=${post.getId()})}" method="post" th:object="${comment}"
+                      class="my-2 my-lg-0">
+                    <textarea
+                            th:field="*{content}"
+                            class="form-control mr-sm-2"
+                            type="search"
+                            rows="2"
+                            maxLength="255"
+                            placeholder="Comment here..."
+                            style="resize: none"
+                            autoFocus>
+                    </textarea>
+                    <button class="btn btn-primary my-2 my-sm-0 w-100" type="submit">
+                        Comment!
+                    </button>
+                </form>
+
+                <div class="card card-body" th:each="comment : ${post.getComments()}">
+                    <h6 class="card-featured">
+                        <a style="text-decoration: none;"
+                           th:id="${#ids.seq('comment')}"
+                           th:href="@{/user(username=${comment.getUser().getUsername()})}">
+
+                            <img class="rounded-circle" style="width: 1.5rem"
+                                 th:src="'https://api.adorable.io/avatars/50/' + ${comment.getUser().getUsername()} + '.png'"/>
+                            <span th:text="${comment.getUser().getUsername()}" class="m-2"> Username</span>
+                        </a>
+                        <span class="badge badge-secondary"
+                              th:text="'Commented at ' + ${comment.getCreatedAt()}">Date</span>
+
+                        <a style="text-decoration: none;"
+                           th:if="${currentUsername.equals(comment.getUser().getUsername())}"
+                           th:id="${#ids.seq('comment')}"
+                           th:href="@{/removeCommentFromDashboard(id=${comment.getId()})}">
+                            <button class="btn badge badge-danger">
+                                x delete
+                            </button>
+                        </a>
+
+                    </h6>
+
+                    <p class="card-text" th:text="${comment.getContent()}">Content</p>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/security/tags">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+
+    <script src="webjars/jquery/3.0.0/jquery.min.js"></script>
+    <link href="webjars/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"/>
+    <script src="webjars/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top" sec:authorize="isAuthenticated()">
+
+    <a class="navbar-brand" href="/dashboard"> Postter </a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <form th:action="@{/search}" method="get" class="form-inline my-2 my-lg-0">
+                    <input name="username" class="form-control mr-sm-2" type="search" placeholder="Search users"/>
+                    <button class="btn btn-outline-light my-2 my-sm-0" type="submit">
+                        Search
+                    </button>
+                </form>
+            </li>
+        </ul>
+
+        <a th:href="@{/user(username=${currentUsername})}">
+            <img th:src="'https://api.adorable.io/avatars/50/' + ${currentUsername} + '.png'"
+                 class="rounded-circle mr-4"
+                 style="width: 2.5rem"/>
+        </a>
+
+        <form action="/logout">
+            <button type="submit" class="btn btn-outline-light"> Logout</button>
+        </form>
+    </div>
+
+</nav>
+
+<div class="jumbotron h-100">
+    <h1 class="display-4">Something went wrong...</h1>
+    <p class="lead" th:text="${errorMessage}">Error</p>
+    <hr class="my-4">
+    <a class="btn btn-primary btn-lg" href="/dashboard" role="button">It's ok!</a>
+</div>
+
+</body>
+</html>

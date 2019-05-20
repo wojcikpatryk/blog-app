@@ -1,0 +1,15 @@
+com\wojcikjer\blog\configuration\SecurityConfiguration.class
+com\wojcikjer\blog\repositories\CommentRepository.class
+com\wojcikjer\blog\configuration\securityUser\MyUserDetailsService.class
+com\wojcikjer\blog\controllers\HomeController.class
+com\wojcikjer\blog\repositories\RoleRepository.class
+com\wojcikjer\blog\configuration\securityUser\MyUserPrincipal.class
+com\wojcikjer\blog\entities\Comment.class
+com\wojcikjer\blog\repositories\UserRepository.class
+com\wojcikjer\blog\configuration\DatabaseLoader.class
+com\wojcikjer\blog\entities\User.class
+com\wojcikjer\blog\BlogApplication.class
+com\wojcikjer\blog\services\PostService.class
+com\wojcikjer\blog\entities\Role.class
+com\wojcikjer\blog\entities\Post.class
+com\wojcikjer\blog\repositories\PostRepository.class
